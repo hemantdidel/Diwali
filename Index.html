@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#160b2b">
+<title>शुभ दीपावली - HEMANT DIDEL</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ min-height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ text-align:center;
+ font-family:Arial,sans-serif;
+ color:white;
+ background:radial-gradient(ellipse at bottom,#64245d,#211039,#090719);
+ overflow:hidden;
+ padding:15px;
+}
+
+#sky{
+ position:fixed;
+ inset:0;
+ width:100%;
+ height:100%;
+ pointer-events:none;
+}
+
+.card{
+ position:relative;
+ z-index:2;
+ width:100%;
+ max-width:550px;
+ padding:35px 22px;
+ border:1px solid #ffd978;
+ border-radius:25px;
+ background:linear-gradient(145deg,#32134de8,#170d2dee);
+ box-shadow:0 0 50px #ff9e3150;
+}
+
+.lamp{
+ font-size:55px;
+ animation:glow 1.5s infinite alternate;
+}
+
+h1{
+ font-size:40px;
+ color:#ffe49a;
+ text-shadow:0 0 20px orange;
+}
+
+.sub{
+ font-size:18px;
+ line-height:1.8;
+ color:#ffe9d1;
+}
+
+button{
+ border:none;
+ border-radius:50px;
+ padding:15px 25px;
+ font-size:17px;
+ font-weight:bold;
+ background:linear-gradient(90deg,#ffe08a,#ff9f43);
+ color:#38152a;
+ cursor:pointer;
+ margin-top:15px;
+}
+
+#message{
+ display:none;
+ margin-top:25px;
+ padding-top:20px;
+ border-top:1px solid #ffd978;
+ font-size:18px;
+ line-height:2;
+ color:#fff3d7;
+ animation:rise 1s ease;
+}
+
+.signature{
+ margin-top:25px;
+ color:#ffd98b;
+ font-size:18px;
+ font-weight:bold;
+ letter-spacing:1px;
+ text-shadow:0 0 12px orange;
+}
+
+@keyframes glow{
+ to{filter:drop-shadow(0 0 25px orange)}
+}
+
+@keyframes rise{
+ from{opacity:0;transform:translateY(20px)}
+ to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="sky"></canvas>
+
+<div class="card">
+
+ <div class="lamp">🪔✨🪔</div>
+
+ <h1>शुभ दीपावली</h1>
+
+ <p class="sub">
+ खुशियों की रोशनी और अपनों का प्यार<br>
+ आपके जीवन को जगमग कर दे।
+ </p>
+
+ <button id="open">
+ 🎆 शुभकामना संदेश खोलें 🎆
+ </button>
+
+ <div id="message">
+ <strong>दीपावली की हार्दिक शुभकामनाएँ!</strong><br>
+
+ माँ लक्ष्मी की कृपा से आपके घर में
+ सुख, समृद्धि और शांति बनी रहे।<br>
+
+ हर नया दिन नई उम्मीद और नई खुशियाँ
+ लेकर आए।<br>
+
+ आपका जीवन दीपों की तरह हमेशा रोशन रहे। ❤️
+ </div>
+
+ <div class="signature">
+ शुभकामनाएँ<br>
+ ✨ HEMANT DIDEL ✨
+ </div>
+
+</div>
+
+<script>
+const canvas=document.getElementById("sky");
+const ctx=canvas.getContext("2d");
+
+let w,h,particles=[];
+
+function resize(){
+ w=canvas.width=innerWidth;
+ h=canvas.height=innerHeight;
+}
+
+window.addEventListener("resize",resize);
+resize();
+
+function burst(x,y){
+
+ const hue=Math.random()*360;
+
+ for(let i=0;i<85;i++){
+
+  let angle=Math.PI*2*i/85;
+  let speed=1.5+Math.random()*4;
+
+  particles.push({
+   x:x,
+   y:y,
+   vx:Math.cos(angle)*speed,
+   vy:Math.sin(angle)*speed,
+   life:80,
+   hue:hue,
+   size:1+Math.random()*2
+  });
+
+ }
+}
+
+function animate(){
+
+ ctx.fillStyle="rgba(9,7,25,0.18)";
+ ctx.fillRect(0,0,w,h);
+
+ if(Math.random()<0.045){
+  burst(Math.random()*w,Math.random()*h*0.6);
+ }
+
+ for(let i=particles.length-1;i>=0;i--){
+
+  let p=particles[i];
+
+  p.x+=p.vx;
+  p.y+=p.vy;
+  p.vy+=0.035;
+  p.life--;
+
+  ctx.globalAlpha=Math.max(0,p.life/80);
+  ctx.fillStyle=`hsl(${p.hue},100%,65%)`;
+
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+  ctx.fill();
+
+  if(p.life<=0){
+   particles.splice(i,1);
+  }
+ }
+
+ ctx.globalAlpha=1;
+
+ requestAnimationFrame(animate);
+}
+
+animate();
+
+document.getElementById("open").onclick=function(){
+
+ document.getElementById("message").style.display="block";
+
+ this.innerHTML="🎇 शुभ दीपावली 🎇";
+
+ for(let i=0;i<7;i++){
+
+  setTimeout(()=>{
+   burst(
+    w*(0.15+Math.random()*0.7),
+    h*(0.15+Math.random()*0.45)
+   );
+  },i*250);
+
+ }
+
+};
+</script>
+
+</body>
+</html>
